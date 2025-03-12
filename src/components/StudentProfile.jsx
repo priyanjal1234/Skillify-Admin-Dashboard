@@ -1,6 +1,6 @@
 import React from "react";
 
-const StudentProfile = ({ student, setshowProfile }) => {
+const StudentProfile = ({ student, setShowProfile }) => {
   return (
     <div>
       <div>
@@ -12,7 +12,7 @@ const StudentProfile = ({ student, setshowProfile }) => {
         <h2 className="text-lg mb-3">Role: {student?.role}</h2>
 
         <button
-          onClick={() => setshowProfile(false)}
+          onClick={() => setShowProfile(false)}
           className="px-3 py-2 bg-slate-700 rounded-lg"
         >
           Go back

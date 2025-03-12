@@ -1,48 +1,49 @@
 import { useQuery } from "@tanstack/react-query";
-import { Filter, Mail, Phone, Clock, Eye, Trash } from "lucide-react";
+import { Mail, Clock, Eye, Trash } from "lucide-react";
 import React, { useState } from "react";
-import studentService from "../services/Student";
+import instructorService from "../services/Instructor";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import StudentProfile from "./StudentProfile";
 import { toast } from "react-toastify";
+import InstructorProfile from "./InstructorProfile";
 
 dayjs.extend(relativeTime);
 
-const Students = () => {
+const Instructors = () => {
   const [selectedFilter, setSelectedFilter] = useState("all");
   const [page, setPage] = useState(1);
-  const [student, setStudent] = useState({});
+  const [instructor, setInstructor] = useState({});
   const [showProfile, setShowProfile] = useState(false);
 
-  const { data, refetch: refetchStudentDetails } = useQuery({
-    queryKey: ["fetchStudentDetails", page],
-    queryFn: async function () {
+  const { data, refetch: refetchInstructorDetails } = useQuery({
+    queryKey: ["fetchInstructorDetails", page],
+    queryFn: async () => {
       try {
-        let studentDetailsRes = await studentService.getStudentDetails(page, 5);
-        return studentDetailsRes.data;
+        const instructorDetailsRes = await instructorService.getInstructorDetails(page, 5);
+        
+        return instructorDetailsRes.data;
       } catch (error) {
-        console.log(error?.response?.data?.message);
+        console.error(error?.response?.data?.message);
         return false;
       }
     },
   });
 
-  function handleViewProfile(studentId) {
+  function handleViewProfile(instructorId) {
     setShowProfile(true);
-    let studentData = data?.students?.find(
-      (student) => student?._id === studentId
+    const instructorData = data?.instructors?.find(
+      (instr) => instr?._id === instructorId
     );
-    if (studentData) {
-      setStudent(studentData);
+    if (instructorData) {
+      setInstructor(instructorData);
     }
   }
 
-  async function handleDeleteStudent(studentId) {
+  async function handleDeleteInstructor(instructorId) {
     try {
-      await studentService.deleteStudent(studentId);
-      toast.success("Student Deleted Successfully");
-      refetchStudentDetails();
+      await instructorService.deleteInstructor(instructorId);
+      toast.success("Instructor Deleted Successfully");
+      refetchInstructorDetails();
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
@@ -51,17 +52,17 @@ const Students = () => {
   return (
     <div className="p-6">
       {showProfile ? (
-        <StudentProfile setShowProfile={setShowProfile} student={student} />
+        <InstructorProfile setShowProfile={setShowProfile} instructor={instructor} />
       ) : (
         <>
-          {data?.students?.length > 0 ? (
+          {data?.instructors?.length > 0 ? (
             <>
               <div className="mb-6">
                 <h1 className="text-2xl font-bold text-gray-900 dark:text-white">
-                  Students
+                  Instructors
                 </h1>
                 <p className="text-gray-500 dark:text-gray-400 mt-1">
-                  Manage and monitor student information
+                  Manage and monitor instructor information
                 </p>
               </div>
 
@@ -78,8 +79,9 @@ const Students = () => {
                             : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
                         }`}
                       >
-                        All Students
+                        All Instructors
                       </button>
+                      {/* Additional filters can be added here */}
                     </div>
                   </div>
                 </div>
@@ -89,33 +91,33 @@ const Students = () => {
                   <table className="w-full">
                     <thead>
                       <tr className="text-left text-sm font-medium text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">
-                        <th className="py-4 px-6">Student</th>
+                        <th className="py-4 px-6">Instructor</th>
                         <th className="py-4 px-6">Contact</th>
-                        <th className="py-4 px-6">Enrolled Courses</th>
+                        <th className="py-4 px-6">Created Courses</th>
                         <th className="py-4 px-6">Join Date</th>
                         <th className="py-4 px-6">Status</th>
                         <th className="py-4 px-6">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {data?.students?.map((student) => (
+                      {data?.instructors?.map((instr) => (
                         <tr
-                          key={student._id}
+                          key={instr?._id}
                           className="border-b border-gray-200 dark:border-gray-700 last:border-0"
                         >
                           <td className="py-4 px-6">
                             <div className="flex items-center space-x-3">
                               <img
-                                src={student?.profileImage}
-                                alt={student.name}
+                                src={instr?.profileImage}
+                                alt={instr.name}
                                 className="w-10 h-10 rounded-full"
                               />
                               <div>
                                 <p className="font-medium text-gray-900 dark:text-white">
-                                  {student?.name}
+                                  {instr?.name}
                                 </p>
                                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                                  {student?.email}
+                                  {instr?.email}
                                 </p>
                               </div>
                             </div>
@@ -124,51 +126,47 @@ const Students = () => {
                             <div className="flex flex-col space-y-1">
                               <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                                 <Mail className="w-4 h-4 mr-2" />
-                                {student?.email}
+                                {instr?.email}
                               </div>
                             </div>
                           </td>
                           <td className="py-4 px-6">
                             <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
-                              {student?.enrolledCourses?.length} courses
+                              {instr?.createdCourses?.length} courses
                             </span>
                           </td>
                           <td className="py-4 px-6">
                             <div className="flex items-center text-sm text-gray-500 dark:text-gray-400">
                               <Clock className="w-4 h-4 mr-2" />
-                              {dayjs(student?.dateJoined).fromNow()}
+                              {dayjs(instr?.dateJoined).fromNow()}
                             </div>
                           </td>
                           <td className="py-4 px-6">
                             <span
                               className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                student.status === "active"
+                                instr.status === "active"
                                   ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
                                   : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300"
                               }`}
                             >
-                              {student?.enrolledCourses?.length > 0
+                              {instr?.createdCourses?.length > 0
                                 ? "active"
                                 : "inactive"}
                             </span>
                           </td>
                           <td className="py-4 px-6 flex space-x-2">
                             <button
-                              onClick={() => handleViewProfile(student?._id)}
+                              onClick={() => handleViewProfile(instr?._id)}
                               className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
                             >
                               <Eye className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                             </button>
-                            {student?.email !== "priyanjal362@gmail.com" && (
-                              <button
-                                onClick={() =>
-                                  handleDeleteStudent(student?._id)
-                                }
-                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
-                              >
-                                <Trash className="w-5 h-5 text-red-600 dark:text-red-400" />
-                              </button>
-                            )}
+                            <button
+                              onClick={() => handleDeleteInstructor(instr?._id)}
+                              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                            >
+                              <Trash className="w-5 h-5 text-red-600 dark:text-red-400" />
+                            </button>
                           </td>
                         </tr>
                       ))}
@@ -181,12 +179,10 @@ const Students = () => {
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       Showing page{" "}
-                      <span className="font-medium">{data?.page || page}</span>{" "}
-                      of{" "}
-                      <span className="font-medium">{data?.pages || "-"}</span>,
-                      total{" "}
+                      <span className="font-medium">{data?.page || page}</span> of{" "}
+                      <span className="font-medium">{data?.pages || "-"}</span>, total{" "}
                       <span className="font-medium">{data?.total || "-"}</span>{" "}
-                      students.
+                      instructors.
                     </p>
                     <div className="flex items-center space-x-2">
                       <button
@@ -211,7 +207,7 @@ const Students = () => {
               </div>
             </>
           ) : (
-            <p>No Students Yet</p>
+            <p>No Instructors Yet</p>
           )}
         </>
       )}
@@ -219,4 +215,4 @@ const Students = () => {
   );
 };
 
-export default Students;
+export default Instructors;

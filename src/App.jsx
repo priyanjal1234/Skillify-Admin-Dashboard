@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Dashboard from "./components/Dashboard";
 import Students from "./components/Students";
+import Instructors from "./components/Instructors";
 
 function App() {
   const [activePage, setActivePage] = useState("dashboard");
@@ -84,6 +85,7 @@ function App() {
           {/* Dashboard Content */}
           {activePage === "dashboard" && <Dashboard />}
           {activePage === "students" && <Students />}
+          {activePage === "instructors" && <Instructors />}
         </main>
       ) : (
         <p className="p-8">You have to first login</p>
