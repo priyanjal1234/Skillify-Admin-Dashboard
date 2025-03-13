@@ -9,7 +9,11 @@ const queryClient = new QueryClient();
 
 createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
-    <App />
+    {document.cookie !== "" ? (
+      <App />
+    ) : (
+      <div className="w-full h-screen bg-[#101828] p-5">Access Denied</div>
+    )}
     <ToastContainer />
   </QueryClientProvider>
 );
