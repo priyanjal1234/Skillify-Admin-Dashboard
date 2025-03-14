@@ -19,8 +19,9 @@ const Instructors = () => {
     queryKey: ["fetchInstructorDetails", page],
     queryFn: async () => {
       try {
-        const instructorDetailsRes = await instructorService.getInstructorDetails(page, 5);
-        
+        const instructorDetailsRes =
+          await instructorService.getInstructorDetails(page, 5);
+
         return instructorDetailsRes.data;
       } catch (error) {
         console.error(error?.response?.data?.message);
@@ -52,7 +53,10 @@ const Instructors = () => {
   return (
     <div className="p-6">
       {showProfile ? (
-        <InstructorProfile setShowProfile={setShowProfile} instructor={instructor} />
+        <InstructorProfile
+          setShowProfile={setShowProfile}
+          instructor={instructor}
+        />
       ) : (
         <>
           {data?.instructors?.length > 0 ? (
@@ -161,12 +165,16 @@ const Instructors = () => {
                             >
                               <Eye className="w-5 h-5 text-gray-600 dark:text-gray-400" />
                             </button>
-                            <button
-                              onClick={() => handleDeleteInstructor(instr?._id)}
-                              className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
-                            >
-                              <Trash className="w-5 h-5 text-red-600 dark:text-red-400" />
-                            </button>
+                            {instr?.email !== "priyanjal362@gmail.com" && (
+                              <button
+                                onClick={() =>
+                                  handleDeleteStudent(student?._id)
+                                }
+                                className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+                              >
+                                <Trash className="w-5 h-5 text-red-600 dark:text-red-400" />
+                              </button>
+                            )}
                           </td>
                         </tr>
                       ))}
@@ -179,8 +187,10 @@ const Instructors = () => {
                   <div className="flex items-center justify-between">
                     <p className="text-sm text-gray-500 dark:text-gray-400">
                       Showing page{" "}
-                      <span className="font-medium">{data?.page || page}</span> of{" "}
-                      <span className="font-medium">{data?.pages || "-"}</span>, total{" "}
+                      <span className="font-medium">{data?.page || page}</span>{" "}
+                      of{" "}
+                      <span className="font-medium">{data?.pages || "-"}</span>,
+                      total{" "}
                       <span className="font-medium">{data?.total || "-"}</span>{" "}
                       instructors.
                     </p>

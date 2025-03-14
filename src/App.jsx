@@ -63,15 +63,8 @@ function App() {
         <main className="flex-1 overflow-auto">
           {/* Header */}
           <header className="bg-gray-800 border-b border-gray-700">
-            <div className="flex items-center justify-between px-6 py-4">
-              <div className="flex items-center bg-gray-700 rounded-lg px-4 py-2 w-96">
-                <Search className="w-5 h-5 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search..."
-                  className="ml-2 bg-transparent border-none focus:outline-none w-full text-gray-100"
-                />
-              </div>
+            <div className="flex items-center justify-end px-6 py-4">
+              
               <div className="flex items-center space-x-4">
                 <button className="p-2 hover:bg-gray-700 rounded-full">
                   <Bell className="w-5 h-5 text-gray-400" />
