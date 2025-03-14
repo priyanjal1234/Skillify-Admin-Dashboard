@@ -6,10 +6,12 @@ class AnalyticsService {
     this.baseUrl = "http://localhost:3000/api/admin";
   }
 
-  async getUserRegisterationAnalytics(startDate,endDate) {
+  async getUserRegisterationAnalytics(startDate, endDate) {
     try {
       return await this.api.get(
-        `${this.baseUrl}/analytics/users/registrations?startDate=${new Date(startDate)}&endDate=${new Date(endDate)}`,
+        `${this.baseUrl}/analytics/users/registrations?startDate=${new Date(
+          startDate
+        )}&endDate=${new Date(endDate)}`,
         { withCredentials: true }
       );
     } catch (error) {
@@ -48,11 +50,16 @@ class AnalyticsService {
     }
   }
 
-  async getOrderRevenue() {
+  async getOrderRevenue(startDate, endDate) {
     try {
-      return await this.api.get(`${this.baseUrl}/analytics/orders/revenue`, {
-        withCredentials: true,
-      });
+      return await this.api.get(
+        `${this.baseUrl}/analytics/orders/revenue?startDate=${new Date(
+          startDate
+        )}&endDate=${new Date(endDate)}`,
+        {
+          withCredentials: true,
+        }
+      );
     } catch (error) {
       throw error;
     }

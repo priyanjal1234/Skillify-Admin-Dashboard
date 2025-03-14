@@ -22,6 +22,9 @@ const Analytics = () => {
   const [startDate, setStartDate] = useState("2025-03-11");
   const [endDate, setEndDate] = useState("2025-03-13");
 
+  const [revenueStartDate, setrevenueStartDate] = useState(null);
+  const [revenueEndDate, setrevenueEndDate] = useState(null);
+
   const PIE_COLORS = [
     "#0088FE",
     "#00C49F",
@@ -60,7 +63,7 @@ const Analytics = () => {
             },
           ],
         });
-        console.log(res.data);
+
         return res.data;
       } catch (error) {
         console.log(error?.response?.data?.message);
@@ -123,11 +126,15 @@ const Analytics = () => {
     },
   });
 
-  let { data: orderRevenueAnalytics,isLoading: isLoadingRevenue,error: errorRevenue } = useQuery({
-    queryKey: ["fetchOrderRevenue"],
+  let {
+    data: orderRevenueAnalytics,
+    isLoading: isLoadingRevenue,
+    error: errorRevenue,
+  } = useQuery({
+    queryKey: ["fetchOrderRevenue",revenueStartDate,revenueEndDate],
     queryFn: async function () {
       try {
-        let res = await analyticsService.getOrderRevenue();
+        let res = await analyticsService.getOrderRevenue(revenueStartDate,revenueEndDate);
 
         return res.data;
       } catch (error) {
@@ -138,6 +145,7 @@ const Analytics = () => {
     },
   });
 
+  console.log(orderRevenueAnalytics)
 
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
@@ -146,6 +154,14 @@ const Analytics = () => {
   const handleEndDateChange = (e) => {
     setEndDate(e.target.value);
   };
+
+  const handleRevenueStartChange = (e) => {
+    setrevenueStartDate(e.target.value)
+  }
+
+  const handleRevenueEndChange = (e) => {
+    setrevenueEndDate(e.target.value)
+  }
 
   return (
     <div className="flex flex-wrap gap-20">
@@ -295,35 +311,57 @@ const Analytics = () => {
       </div>
 
       {/* Order Revenue Line Chart */}
-      
-      <div className="w-[40%]">
-      {isLoadingRevenue ? (
-        <p>Loading order revenue chart...</p>
-      ) : errorRevenue ? (
-        <p>Error loading order revenue data.</p>
-      ) : (
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart
-            data={orderRevenueAnalytics}
-            margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" stroke="#444" />
-            <XAxis dataKey="_id" stroke="#ccc" />
-            <YAxis stroke="#ccc" />
-            <Tooltip
-              contentStyle={{ backgroundColor: "#fff", color: "#000" }}
+
+      <div className="p-5 w-[40%]">
+        <div style={{ marginBottom: "1rem" }}>
+          <label style={{ marginRight: "1rem" }}>
+            Start Date:
+            <input
+              type="date"
+              value={revenueStartDate}
+              onChange={handleRevenueStartChange}
+              style={{ marginLeft: "0.5rem" }}
             />
-            <Legend wrapperStyle={{ color: "#ccc" }} />
-            <Line
-              type="monotone"
-              dataKey="totalRevenue"
-              stroke="#ff7300"
-              strokeWidth={2}
-              activeDot={{ r: 8 }}
+          </label>
+
+          <label>
+            End Date:
+            <input
+              type="date"
+              value={revenueEndDate}
+              onChange={handleRevenueEndChange}
+              style={{ marginLeft: "0.5rem" }}
             />
-          </LineChart>
-        </ResponsiveContainer>
-      )}
+          </label>
+        </div>
+
+        {isLoadingRevenue ? (
+          <p>Loading order revenue chart...</p>
+        ) : errorRevenue ? (
+          <p>Error loading order revenue data.</p>
+        ) : (
+          <ResponsiveContainer width="100%" height={400}>
+            <LineChart
+              data={orderRevenueAnalytics}
+              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="#444" />
+              <XAxis dataKey="_id" stroke="#ccc" />
+              <YAxis stroke="#ccc" />
+              <Tooltip
+                contentStyle={{ backgroundColor: "#fff", color: "#000" }}
+              />
+              <Legend wrapperStyle={{ color: "#ccc" }} />
+              <Line
+                type="monotone"
+                dataKey="totalRevenue"
+                stroke="#ff7300"
+                strokeWidth={2}
+                activeDot={{ r: 8 }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+        )}
       </div>
     </div>
   );

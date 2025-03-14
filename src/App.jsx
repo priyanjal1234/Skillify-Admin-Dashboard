@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -19,6 +19,7 @@ import Analytics from "./components/Analytics";
 function App() {
   const [activePage, setActivePage] = useState("dashboard");
 
+  
   // Updated menu items including additional features
   const menuItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
