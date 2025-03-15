@@ -167,7 +167,7 @@ const Analytics = () => {
     <div className="flex flex-wrap gap-20">
       <div
         className="p-5 w-[40%]"
-        style={{ backgroundColor: "#0d1117", color: "#fff" }}
+        
       >
         {/* Date range selectors */}
         <div style={{ marginBottom: "1rem" }}>
