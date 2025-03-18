@@ -59,8 +59,7 @@ function App() {
         </nav>
       </aside>
 
-      {document.cookie !== "" ? (
-        <main className="flex-1 overflow-auto">
+     <main className="flex-1 overflow-auto">
           {/* Header */}
           <header className="bg-gray-800 border-b border-gray-700">
             <div className="flex items-center justify-end px-6 py-4">
@@ -83,9 +82,6 @@ function App() {
           {activePage === "instructors" && <Instructors />}
           {activePage === "analytics" && <Analytics />}
         </main>
-      ) : (
-        <p className="p-8">You have to first login</p>
-      )}
     </div>
   );
 }
