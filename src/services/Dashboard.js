@@ -3,7 +3,7 @@ import api from "./api";
 class DashboardService {
   constructor() {
     this.api = api;
-    this.baseUrl = "https://skillify-lms.xyz/api/admin";
+    this.baseUrl = "https://skillify-backend.onrender.com/api/admin";
   }
 
   async getDashboardDetails() {
