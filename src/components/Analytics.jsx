@@ -163,6 +163,10 @@ const Analytics = () => {
     setrevenueEndDate(e.target.value)
   }
 
+  if(!userRegisterationAnalytics || !userRoleAnalytics || !courseEnrollmentAnalytics || !courseRatingsAnalytics || !orderRevenueAnalytics) {
+    return <h1>Some data is missing</h1>
+  }
+
   return (
     <div className="flex flex-wrap gap-20">
       <div
