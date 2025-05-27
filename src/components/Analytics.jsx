@@ -145,7 +145,7 @@ const Analytics = () => {
     },
   });
 
-  console.log(orderRevenueAnalytics)
+
 
   const handleStartDateChange = (e) => {
     setStartDate(e.target.value);
@@ -164,7 +164,7 @@ const Analytics = () => {
   }
 
   if(!userRegisterationAnalytics || !userRoleAnalytics || !courseEnrollmentAnalytics || !courseRatingsAnalytics || !orderRevenueAnalytics) {
-    return <h1>Some data is missing</h1>
+    return <h1>Loading...</h1>
   }
 
   return (
